@@ -1,0 +1,19 @@
+
+
+1. post SignUp / user registretion
+    '/api/signup'
+
+2. get expensesModel
+   '/api/expenses'
+    
+3. get expenses by UseId 
+   '/api/expenses/:userId'
+
+4. post expenses 
+    '/api/expenses'
+
+5. get expenses by userId and expensesType
+   '/api/expenses/userId/expensesType'
+
+6. post catagory 
+   '/api/catagory'

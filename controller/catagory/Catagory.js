@@ -46,7 +46,7 @@ const getAllCatagoriesController = async (req, res) => {
 const getCatagoiesByExpenseId = async (req, res) => {
     const expenseId = req.params.expenseId
     try {
-        const result = await catagoryModel.find({ $match: { expenseId } })
+        const result = await catagoryModel.find({ $match: { expenseId: expenseId } })
         if (!result) {
             res.json({
                 status: 400,

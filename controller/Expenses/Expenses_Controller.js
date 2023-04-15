@@ -4,11 +4,73 @@ const expensesModel = require("../../model/Expenses")
 const getAllExprensesController = async (req, res) => {
     try {
         const result = await expensesModel.aggregate([
+
             {
                 $lookup: {
-                    from
+                    from: "subcatagories",
+                    localField: "subCatagoryId",
+                    foreignField: 'id',
+                    as: 'subcatagory'
+                }
+            },
+            {
+                $lookup: {
+                    from: "expensetypes",
+                    localField: "expenseType",
+                    foreignField: 'id',
+                    as: 'expense'
+                }
+            },
+            {
+                $lookup: {
+                    from: "paymethods",
+                    localField: "payMethodId",
+                    foreignField: 'id',
+                    as: 'method'
+                },
+            },
+            {
+                $lookup: {
+                    from: "paymentstatuses",
+                    localField: "payStatusId",
+                    foreignField: "id",
+                    as: "status"
+                }
+            },
+            {
+                $unwind: "$expense"
+            },
+            {
+                $unwind: '$subcatagory'
+            },
+            {
+                $unwind: "$method"
+            }, {
+                $unwind: "$status"
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "expenseType": 0,
+                    "subCatagoryId": 0,
+                    "payMethodId": 0,
+                    "payStatusId": 0,
+                    "__v": 0,
+                    "expense._id": 0,
+                    "expense.__v": 0,
+
+                    "subcatagory._id": 0,
+                    "subcatagory.__v": 0,
+
+                    "method._id": 0,
+                    "method.__v": 0,
+
+                    "status._id": 0,
+                    "status.__v": 0
+
                 }
             }
+
         ])
         res.send(result)
 

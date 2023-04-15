@@ -2,16 +2,16 @@ const { default: mongoose } = require("mongoose");
 
 
 const ExpensesSecha=mongoose.Schema({
-     expenseTypeId:{
+     id:{
           type:String,
           required:true
      },
-     expensesType:{
+     type:{
           type:String,
           required:true
      }
 })
 
-const expenseType = mongoose.model('/expenses-type',ExpensesSecha)
+const expenseType = mongoose.model('expensetype ',ExpensesSecha)
 
 module.exports = expenseType

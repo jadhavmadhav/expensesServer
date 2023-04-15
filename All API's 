@@ -7,7 +7,7 @@
    '/api/expenses'
     
 3. get expenses by UseId 
-   '/api/expenses/:userId'
+   '/api/expenses-user/:userId'
 
 4. post expenses 
     '/api/expenses'

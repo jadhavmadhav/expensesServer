@@ -11,24 +11,30 @@ connectDB(DB)
 app.use(cors())
 app.use(express.json())
 
+const { GetAllExpenses, PostExpense } = require('./routes/ExpensesRoute')
+const { PostStatusRoute, getAllPayStatus } = require('./routes/PayStatus')
+const { postCatagory, getCatagoriesByExpenseType, getAllCatagories } = require('./routes/CatagoryRoute')
+const { PostSubCatagory, getAllSubCatagory, getSubCatagoryByCatagoryId } = require('./routes/SubCatagortRoute')
+const { postPayMethod, getAllPayMethod } = require('./routes/PaymentMethod')
 
-const postSignUp = require('./routes/signUpRoute')
-const postExpenses = require('./routes/ExpensesRoutes/expensesRoute')
-const getExpenses = require('./routes/ExpensesRoutes/getRoute')
-const postCatagoryMaster = require('./routes/master/postCatagory')
-const getexpenseByUserId = require('./routes/ExpensesRoutes/getExpenseByUserId')
-const getExpByUserIdAndExpType = require('./routes/ExpensesRoutes/getExpByUserIdAndExpType')
-const getExpensesById = require('./routes/ExpensesRoutes/expenseById')
 
-app.use('/api', postSignUp)
-app.use('/api',postCatagoryMaster)
+app.use('/api', GetAllExpenses)
+app.use('/api', PostExpense)
 
-app.use('/api', postExpenses)
-app.use('/api', getExpenses)
-app.use('/api',getExpensesById)
-app.use('/api',getexpenseByUserId)
-app.use('/api',getExpByUserIdAndExpType)
+app.use('/api', PostStatusRoute)
+app.use('/api',getAllPayStatus)
+
+app.use('/api',postPayMethod)
+app.use('/api',getAllPayMethod)
+
+app.use('/api', postCatagory)
+app.use('/api',getAllCatagories)
+app.use('/api',getCatagoriesByExpenseType)
+
+app.use('/api', PostSubCatagory)
+app.use('/api', getAllSubCatagory)
+app.use('/api', getSubCatagoryByCatagoryId)
 
 app.listen(5000, () => {
-     console.log('conection 5000')
+     console.log('conection 5000 ')
 })

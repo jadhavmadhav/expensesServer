@@ -2,19 +2,24 @@ const mongoose = require("mongoose");
 
 
 const expensesSchema = mongoose.Schema({
-  userId: {
+  id: {
     type: String,
     required: true
   },
-  expensesId: {
+
+  expenseType: {
     type: String,
     required: true
   },
-  expensesType: {
+  subCatagoryId: {
     type: String,
     required: true
   },
-  catagory: {
+  payMethodId: {
+    type: String,
+    required: true
+  },
+  payStatusId: {
     type: String,
     required: true
   },
@@ -23,17 +28,15 @@ const expensesSchema = mongoose.Schema({
     required: true
   },
   description: {
-    type: String
+    type: String, 
   },
-  date: {
+  createdDate: {
     type: String,
     required: true
   },
-  day: {
-    type: String
-  },
-  time: {
-    type: String
+createdTime: {
+    type: String,
+    required: true
   }
 })
 

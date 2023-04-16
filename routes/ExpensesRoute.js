@@ -1,17 +1,19 @@
 
 
 const express = require('express')
-const {getAllExprensesController, postExpneseController} = require('../controller/Expenses/Expenses_Controller')
+const {getAllExprensesController, postExpneseController, getWeeklyExpenses} = require('../controller/Expenses/Expenses_Controller')
  
 
 const GetAllExpenses = express.Router()
+const PostExpense = express.Router()
+const currentWeekExpense = express.Router()
+
 
 GetAllExpenses.get('/expenses', getAllExprensesController)
 
-const PostExpense = express.Router()
 
 PostExpense.post('/expense',postExpneseController)
+currentWeekExpense.get('/current-week',getWeeklyExpenses)
 
-
-module.exports = {GetAllExpenses,PostExpense}
+module.exports = {GetAllExpenses,PostExpense,currentWeekExpense}
  

@@ -11,7 +11,7 @@ connectDB(DB)
 app.use(cors())
 app.use(express.json())
 
-const { GetAllExpenses, PostExpense } = require('./routes/ExpensesRoute')
+const { GetAllExpenses, PostExpense, currentWeekExpense } = require('./routes/ExpensesRoute')
 const { PostStatusRoute, getAllPayStatus } = require('./routes/PayStatus')
 const { postCatagory, getCatagoriesByExpenseType, getAllCatagories } = require('./routes/CatagoryRoute')
 const { PostSubCatagory, getAllSubCatagory, getSubCatagoryByCatagoryId } = require('./routes/SubCatagortRoute')
@@ -20,6 +20,7 @@ const { postPayMethod, getAllPayMethod } = require('./routes/PaymentMethod')
 
 app.use('/api', GetAllExpenses)
 app.use('/api', PostExpense)
+app.use('/api', currentWeekExpense)
 
 app.use('/api', PostStatusRoute)
 app.use('/api',getAllPayStatus)
@@ -35,6 +36,6 @@ app.use('/api', PostSubCatagory)
 app.use('/api', getAllSubCatagory)
 app.use('/api', getSubCatagoryByCatagoryId)
 
-app.listen(5001, () => {
-     console.log('conection 5001 ')
+app.listen(5000, () => {
+     console.log('conection 5000 ')
 })

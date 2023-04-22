@@ -46,16 +46,22 @@ const getAllSubCatagoryController = async (req, res) => {
 const getSubCatagoryByCatagoyController = async (req, res) => {
     const catagoryId = req.params.catagoryId
     try {
-        const result = await subCatagoriesModel.find({ $match: { catagoryId: catagoryId } })
-        if(!result){
+        const result = await subCatagoriesModel.aggregate([
+            {
+                $match: {
+                    catagoryId: catagoryId
+                }
+            }
+        ])
+        if (!result) {
             res.json({
-                status:404,
-                message:'sub catagories is not found !'
+                status: 404,
+                message: 'sub catagories is not found !'
             })
-        }else{
+        } else {
             res.json({
-                status:404,
-                message:'get all sub catagories by catagory Id !',
+                status: 404,
+                message: 'get all sub catagories by catagory Id !',
                 result
             })
         }

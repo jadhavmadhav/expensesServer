@@ -19,7 +19,9 @@ const postCatagoryController = async (req, res) => {
         }))
 
     } catch (error) {
-        console.log(error)
+        res.json({
+            message: result.errors.properties.path
+        })
     }
 }
 
@@ -39,7 +41,9 @@ const getAllCatagoriesController = async (req, res) => {
             })
         }
     } catch (error) {
-        console.log(error)
+        res.json({
+            message: result.errors.properties.path
+        })
     }
 }
 
@@ -61,9 +65,7 @@ const getCatagoiesByExpenseId = async (req, res) => {
         }
     } catch (error) {
         res.json({
-            status: 200,
-            message: ' get all catagoies successfully !',
-            result
+            message: result.errors.properties.path
         })
     }
 }

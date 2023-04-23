@@ -665,8 +665,7 @@ const getPreviouse7DaysExpense = async (req, res) => {
                     '_id': 0
 
                 }
-            },
-
+            },  
 
         ])
 

@@ -1,7 +1,7 @@
 
 
 const express = require('express')
-const { getAllExprensesController, postExpneseController, getWeeklyExpenses, getTodaysExpenses, getExpensByAnalyseController, getPreviouse7DaysExpense, putExpenses } = require('../controller/Expenses/Expenses_Controller')
+const { getAllExprensesController, postExpneseController, getWeeklyExpenses, getExpensByAnalyseController, getPreviouse7DaysExpense, putExpenses } = require('../controller/Expenses/Expenses_Controller')
 
 
 const GetAllExpenses = express.Router()
@@ -17,8 +17,7 @@ GetAllExpenses.get('/expenses', getAllExprensesController)
 
 PostExpense.post('/expense', postExpneseController)
 updateExpense.put('/expense/:id',putExpenses)
-currentWeekExpense.get('/current-week', getWeeklyExpenses)
-todaysExpenses.get('/today', getTodaysExpenses)
+currentWeekExpense.get('/current-week', getWeeklyExpenses) 
 getExpensById.get('/expense', getExpensByAnalyseController)
 getPrevious7BarChart.get('/barchart', getPreviouse7DaysExpense)
 

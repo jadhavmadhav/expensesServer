@@ -10,6 +10,25 @@ const postExpneseController = async (req, res) => {
 
 
     const id = (await expensesModel.find()).length + 1
+
+    const expenseType = req.body.expenseType
+    const amount = req.body.amount
+
+    const previouesBalance = await expensesModel.find({ id: id - 1 })
+    let nowBalance
+
+    if (id - 1 >= 1) {
+        if (expenseType === 1) {
+            nowBalance = previouesBalance[0]?.balance - amount
+        } else {
+            nowBalance = previouesBalance[0]?.balance + amount
+
+        }
+    } else {
+        nowBalance = amount
+    }
+
+    console.log(nowBalance, id)
     try {
         const result = new expensesModel({
             id,
@@ -18,6 +37,7 @@ const postExpneseController = async (req, res) => {
             payMethodId: req.body.payMethodId,
             payStatusId: req.body.payStatusId,
             amount: req.body.amount,
+            balance: nowBalance,
             description: req.body.description,
             createdDate,
             createdTime
@@ -34,11 +54,9 @@ const postExpneseController = async (req, res) => {
         })
 
     } catch (errors) {
-        // console.log(errors.properties.path)
+        console.log(errors)
 
-        res.json({
-            message: result.errors.properties.path
-        })
+
 
     }
 
@@ -46,19 +64,40 @@ const postExpneseController = async (req, res) => {
 
 const putExpenses = async (req, res) => {
     const id = req.params.id
-    console.log(id)
+    const balance = await expensesModel.find({ id: id })
+    const currentBalance = balance[0].balance
+    const currentAmount = req.body.amount
 
+    let updateObject = { ...req.body }
+    if (currentAmount === currentBalance) {
+        console.log("stage 1")
+        updateObject
+    } else if (currentAmount > currentBalance) {
+
+        let res = currentAmount - currentBalance
+        console.log("stage 2", res)
+
+        updateObject = { ...updateObject, balance: currentBalance + res }
+    } else {
+        let res = currentBalance - currentAmount
+
+        updateObject = { ...updateObject, balance: currentBalance - res }
+        console.log("stage 3", res, updateObject)
+
+    }
+
+    // console.log(updateObject)
     try {
         const result = await expensesModel.updateOne({ id }, {
             $set: {
-                ...req.body
+                ...updateObject
             }
         })
 
         res.json({
             status: 200,
-            message: "expenses updated successfully !",
-
+            message: `expenses updated successfully ! , ${updateObject}, balace:${balance[0].balance} `,
+            result
         })
     } catch (error) {
         console.log(error.message)
@@ -161,6 +200,7 @@ const getAllExprensesController = async (req, res) => {
         })
     }
 }
+
 
 
 const getWeeklyExpenses = async (req, res) => {
@@ -448,28 +488,127 @@ const getWeeklyExpenses = async (req, res) => {
         }
     } catch (error) {
         res.json({
-            message: result.errors.properties.path
+            message: "some thing wrong !"
         })
     }
 }
 
-const getTodaysExpenses = async (req, res) => {
-    const curr = new Date()
-    const today = moment(curr).format("YYYY-MM-DD")
+const getExpensesById = async (req, res) => {
+    const id = req.params.id
     try {
         const result = await expensesModel.aggregate([
             {
-                $match: { createdDate: today }
+                $match: { id }
+            },
+            {
+                $lookup: {
+                    from: "expensetypes",
+                    localField: "expenseType",
+                    foreignField: "id",
+                    as: 'expense'
+                }
+            },
+            {
+                $lookup: {
+                    from: "subcatagories",
+                    localField: "subCatagoryId",
+                    foreignField: 'id',
+                    as: 'subcatagory'
+                }
+            },
+            {
+                $lookup: {
+                    from: "paymethods",
+                    localField: "payMethodId",
+                    foreignField: 'id',
+                    as: 'method'
+                },
+            },
+            {
+                $lookup: {
+                    from: "paymentstatuses",
+                    localField: "payStatusId",
+                    foreignField: "id",
+                    as: "status"
+                }
+            },
+            {
+                $unwind: "$expense"
+            },
+            {
+                $unwind: {
+                    path: '$subcatagory',
+                    preserveNullAndEmptyArrays: true
+                }
+
+            },
+            {
+                $addFields: { catagoryId: "$subcatagory.catagoryId" }
+            },
+            {
+                $unwind: "$method"
+            }, {
+                $unwind: "$status"
+            },
+
+            {
+                $lookup: {
+                    from: "catagories",
+                    localField: "catagoryId",
+                    foreignField: "catagoryId",
+                    as: "catagory"
+                }
+            },
+            {
+                $unwind: "$catagory"
+            },
+            {
+                $set: {
+                    type: "$expense.type",
+                    // subcatagory: "$subcatagory.subCatagory",
+                    catagory: "$catagory.catagory"
+                }
+            },
+            {
+                $project: {
+                    "_id": 0,
+                    "expenseType": 0,
+                    "subCatagoryId": 0,
+                    "catagoryId": 0,
+                    "payMethodId": 0,
+                    "payStatusId": 0,
+                    "__v": 0,
+                    "expense": 0,
+                    "method._id": 0,
+                    "method.__v": 0,
+
+                    "status._id": 0,
+                    "status.__v": 0,
+                    "subcatagory._id": 0,
+                    "subcatagory.__v": 0,
+                    "subcatagory.catagoryId": 0,
+                    "createdDate": 0,
+                    "createdTime": 0
+
+
+
+                }
+            },
+            {
+                $sort: {
+                    createdDate: -1,
+                    createdTime: -1
+                }
             }
         ])
         res.status(200).json({
             status: 200,
-            message: "get Today Expenses Successfully !",
-            result
+            message: "get Expense By Expense Id ...!",
+            result: result[0]
         })
     } catch (error) {
         res.json({
-            message: result.errors.properties.path
+            message: error
         })
     }
 }
@@ -583,6 +722,12 @@ const getExpensByAnalyseController = async (req, res) => {
                     "status": 0
 
                 }
+            },
+            {
+                $sort: {
+                    createdDate: -1,
+                    createdTime: -1
+                }
             }
         ])
 
@@ -593,7 +738,8 @@ const getExpensByAnalyseController = async (req, res) => {
         })
     } catch (error) {
         res.json({
-            message: result.errors.properties.path
+            status: 404,
+            message: 'some things wrongs'
         })
     }
 }
@@ -665,7 +811,7 @@ const getPreviouse7DaysExpense = async (req, res) => {
                     '_id': 0
 
                 }
-            },  
+            },
 
         ])
 
@@ -707,7 +853,7 @@ module.exports = {
     postExpneseController,
     putExpenses,
     getWeeklyExpenses,
-    getTodaysExpenses,
+    getExpensesById,
     getExpensByAnalyseController,
     getPreviouse7DaysExpense
 } 

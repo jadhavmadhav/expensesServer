@@ -13,7 +13,7 @@ app.use(express.json())
 
 const { GetAllExpenses, PostExpense, currentWeekExpense, todaysExpenses, getExpensById, getPrevious7BarChart, updateExpense } = require('./routes/ExpensesRoute')
 const { PostStatusRoute, getAllPayStatus } = require('./routes/PayStatus')
-const { postCatagory, getCatagoriesByExpenseType, getAllCatagories } = require('./routes/CatagoryRoute')
+const { postCatagory, getCatagoriesByExpenseType, getAllCatagories, getExpenseById } = require('./routes/CatagoryRoute')
 const { PostSubCatagory, getAllSubCatagory, getSubCatagoryByCatagoryId } = require('./routes/SubCatagortRoute')
 const { postPayMethod, getAllPayMethod } = require('./routes/PaymentMethod')
 
@@ -25,6 +25,7 @@ app.use('/api', currentWeekExpense)
 app.use('/api',todaysExpenses)
 app.use('/api',getExpensById)
 app.use('/api',getPrevious7BarChart)
+app.use('/api',getExpenseById)
 
 app.use('/api', PostStatusRoute)
 app.use('/api',getAllPayStatus)
@@ -40,6 +41,6 @@ app.use('/api', PostSubCatagory)
 app.use('/api', getAllSubCatagory)
 app.use('/api', getSubCatagoryByCatagoryId)
 
-app.listen(2000, () => {
-     console.log('conection 2000 ')
+app.listen(5000, () => {
+     console.log('conection 5000 ')
 })

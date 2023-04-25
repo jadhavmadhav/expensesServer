@@ -27,14 +27,17 @@ const expensesSchema = mongoose.Schema({
     type: Number,
     required: true
   },
-  description: { 
-    type: String, 
+  balance: {
+    type: Number
+  },
+  description: {
+    type: String,
   },
   createdDate: {
     type: String,
     required: true
   },
-createdTime: {
+  createdTime: {
     type: String,
     required: true
   }

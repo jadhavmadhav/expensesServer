@@ -839,7 +839,12 @@ const getPreviouse7DaysExpense = async (req, res) => {
         res.json({
             status: 200,
             message: `get previoue 7 days expenses amount for bar chart from ${startDate} to ${lastDate}`,
-            result: { income: IncomeResult, expense: ExpenseResult }
+            result: {
+                startDate: moment(startDate).format("DD/MM"),
+                lastDate: moment(lastDate).format("DD/MM"),
+                income: IncomeResult,
+                expense: ExpenseResult
+            }
 
         })
     } catch (error) {

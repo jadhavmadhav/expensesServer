@@ -65,7 +65,7 @@ const getCatagoiesByExpenseId = async (req, res) => {
         }
     } catch (error) {
         res.json({
-            message: result.errors.properties.path
+            message:error
         })
     }
 }
